@@ -7,10 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		504EEBF725E8CAA90050DD44 /* VMBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EEBF625E8CAA90050DD44 /* VMBackgroundView.swift */; };
+		504EEBFB25E8CB7C0050DD44 /* Choiwan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EEBFA25E8CB7C0050DD44 /* Choiwan.swift */; };
+		504EEC0A25E8F1AE0050DD44 /* VMProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EEC0925E8F1AE0050DD44 /* VMProgressView.swift */; };
+		504EEC0E25E8F39C0050DD44 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504EEC0D25E8F39C0050DD44 /* UIKit.framework */; };
 		5091459B2541D06200E2DD44 /* Choiwan.h in Headers */ = {isa = PBXBuildFile; fileRef = 509145992541D06200E2DD44 /* Choiwan.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		504EEBF625E8CAA90050DD44 /* VMBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMBackgroundView.swift; sourceTree = "<group>"; };
+		504EEBFA25E8CB7C0050DD44 /* Choiwan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Choiwan.swift; sourceTree = "<group>"; };
+		504EEC0925E8F1AE0050DD44 /* VMProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMProgressView.swift; sourceTree = "<group>"; };
+		504EEC0D25E8F39C0050DD44 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		509145962541D06200E2DD44 /* Choiwan.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Choiwan.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		509145992541D06200E2DD44 /* Choiwan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Choiwan.h; sourceTree = "<group>"; };
 		5091459A2541D06200E2DD44 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -21,17 +29,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				504EEC0E25E8F39C0050DD44 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		504EEBF125E8C98E0050DD44 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				504EEBFA25E8CB7C0050DD44 /* Choiwan.swift */,
+				504EEBF625E8CAA90050DD44 /* VMBackgroundView.swift */,
+				504EEC0925E8F1AE0050DD44 /* VMProgressView.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		504EEC0C25E8F39C0050DD44 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				504EEC0D25E8F39C0050DD44 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		5091458C2541D06200E2DD44 = {
 			isa = PBXGroup;
 			children = (
 				509145982541D06200E2DD44 /* Sources */,
 				509145972541D06200E2DD44 /* Products */,
+				504EEC0C25E8F39C0050DD44 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -46,6 +74,7 @@
 		509145982541D06200E2DD44 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				504EEBF125E8C98E0050DD44 /* Core */,
 				509145992541D06200E2DD44 /* Choiwan.h */,
 				5091459A2541D06200E2DD44 /* Info.plist */,
 			);
@@ -94,6 +123,7 @@
 				TargetAttributes = {
 					509145952541D06200E2DD44 = {
 						CreatedOnToolsVersion = 12.0;
+						LastSwiftMigration = 1240;
 					};
 				};
 			};
@@ -130,6 +160,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				504EEBF725E8CAA90050DD44 /* VMBackgroundView.swift in Sources */,
+				504EEC0A25E8F1AE0050DD44 /* VMProgressView.swift in Sources */,
+				504EEBFB25E8CB7C0050DD44 /* Choiwan.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +295,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -279,6 +313,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -288,6 +323,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
