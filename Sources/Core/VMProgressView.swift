@@ -11,7 +11,7 @@ import UIKit
 
 public class VMProgressView: UIView {
   
-  var progress: Float = 0.0 {
+  public var progress: Float = 0.0 {
     willSet {
       if newValue < 0.0 || newValue > 1.0 {
         return
@@ -20,7 +20,7 @@ public class VMProgressView: UIView {
     }
   }
   
-  var progressTintColor: UIColor? {
+  public var progressTintColor: UIColor? {
     didSet {
       if self.progressTintColor != oldValue {
         self.setNeedsDisplay()
@@ -28,7 +28,7 @@ public class VMProgressView: UIView {
     }
   }
   
-  var trackTintColor: UIColor? {
+  public var trackTintColor: UIColor? {
     didSet {
       if self.trackTintColor != oldValue {
         self.setNeedsDisplay()
@@ -62,7 +62,8 @@ public class VMProgressView: UIView {
   public override func draw(_ rect: CGRect) {
     let context = UIGraphicsGetCurrentContext()
     
-    
+    self.drawBackground(context: context)
+    self.drawProgress(context: context, rect: rect)
   }
   
   private func initialize() {
@@ -70,12 +71,58 @@ public class VMProgressView: UIView {
     self.isOpaque = false
   }
   
-  private func drawBackground() {
+  private func drawBackground(context: CGContext?) {
+    guard let progressTintColor = self.progressTintColor, let trackTintColor = self.trackTintColor else { fatalError("Place set `progressTintColor` and `trackTintColor` property") }
     
+    switch self.mode {
+    case .barProgress:
+      break
+    case .ringProgress, .sectorProgress:
+      context?.setLineWidth(self.mode.lineWidth)
+      context?.setStrokeColor(progressTintColor.cgColor)
+      context?.setFillColor(trackTintColor.cgColor)
+      context?.strokeEllipse(in: self.mode.circleRect(bounds: self.bounds))
+    default:
+      break
+    }
   }
   
-  private func drawProgress() {
+  private func drawProgress(context: CGContext?, rect: CGRect) {
+    guard let progressTintColor = self.progressTintColor else { fatalError("Place set `progressTintColor` and `trackTintColor` property") }
     
+    switch self.mode {
+    case .barProgress:
+      break
+    case .ringProgress, .sectorProgress:
+      context?.setBlendMode(.copy)
+      self.setArcPath(mode: self.mode, rect: rect, progressTintColor: progressTintColor)
+    default:
+      break
+    }
+  }
+  
+  private func setArcPath(mode: VMHUDMode, rect: CGRect, progressTintColor: UIColor) {
+    let progressPath = UIBezierPath()
+    
+    let center = CGPoint(x: rect.midX, y: rect.midY)
+    let radius = (rect.height / 2.0) - self.mode.lineWidth * 2.0
+    let startAngle: CGFloat = -(.pi / 2.0)
+    let endAngle: CGFloat = (CGFloat(self.progress) * 2.0 * .pi) + startAngle
+    
+    progressPath.addArc(withCenter: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
+    progressTintColor.set()
+    
+    switch mode {
+    case .ringProgress:
+      progressPath.lineWidth = self.mode.lineWidth * 2.0
+      progressPath.lineCapStyle = .butt
+      progressPath.stroke()
+    case .sectorProgress:
+      progressPath.addLine(to: center)
+      progressPath.fill()
+    default:
+      fatalError("Place use `ringProgress` or `sectorProgress` mode")
+    }
   }
 }
 
@@ -84,90 +131,29 @@ extension VMHUDMode {
   var contentSize: CGSize {
     switch self {
     case .barProgress: return CGSize(width: 120.0, height: 10.0)
-    case .ringProgress: return CGSize(width: 40.0, height: 40.0)
-    case .sectorProgress: return CGSize(width: 40.0, height: 40.0)
+    case .ringProgress, .sectorProgress: return CGSize(width: 40.0, height: 40.0)
     default: fatalError("The value can't match this property")
+    }
+  }
+  
+  var lineWidth: CGFloat {
+    switch self {
+    case .barProgress: return 2.0
+    case .ringProgress, .sectorProgress: return 1.0
+    default: fatalError("The value can't match this property")
+    }
+  }
+  
+  func circleRect(bounds: CGRect) -> CGRect {
+    switch self {
+    case .barProgress: return bounds
+    case .ringProgress, .sectorProgress: return bounds.insetBy(dx: self.lineWidth / 2.0, dy: self.lineWidth / 2.0)
+    default: fatalError("The value can't match this method")
     }
   }
 }
 
 #endif
-
-/*
- public class JSSectorProgressView: UIView {
- 
-     public override func draw(_ rect: CGRect) {
-         let context = UIGraphicsGetCurrentContext()
-         
-         let lineWidth: CGFloat = 1.0
-         let circleRect = self.bounds.insetBy(dx: lineWidth / 2.0, dy: lineWidth / 2.0)
-         
-         // Draw background
-         context?.setLineWidth(1.0)
-         context?.setStrokeColor(self.progressTintColor.cgColor)
-         context?.setFillColor(self.trackTintColor.cgColor)
-         
-         context?.strokeEllipse(in: circleRect)
-         
-         // Draw progress
-         let progressPath = UIBezierPath()
-         
-         let center = CGPoint(x: rect.midX, y: rect.midY)
-         let radius = (rect.height / 2.0) - 1.5
-         let startAngle: CGFloat = -(.pi / 2.0)
-         let endAngle = (CGFloat(self.progress) * 2.0 * .pi) + startAngle
-         
-         progressPath.addArc(withCenter: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
-         progressPath.addLine(to: center)
-         
-         context?.setBlendMode(.copy)
-         
-         self.progressTintColor.set()
-         
-         progressPath.fill()
-     }
- }
-
- */
-
-/*
- public class JSRingProgressView: UIView {
-
-     public override func draw(_ rect: CGRect) {
-         let context = UIGraphicsGetCurrentContext()
-
-         let lineWidth: CGFloat = 2.0
-         let circleRect = self.bounds.insetBy(dx: lineWidth / 2.0, dy: lineWidth / 2.0)
-         
-         // Draw background
-         context?.setLineWidth(lineWidth)
-         context?.setStrokeColor(self.progressTintColor.cgColor)
-         context?.setFillColor(self.trackTintColor.cgColor)
-         
-         context?.strokeEllipse(in: circleRect)
-
-         // Draw progress
-         let progressPath = UIBezierPath()
-
-         progressPath.lineWidth = lineWidth * 2.0
-         progressPath.lineCapStyle = .butt
-         
-         let center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
-         let radius = (self.bounds.width / 2.0) - lineWidth
-         let startAngle: CGFloat = -(.pi / 2.0)
-         let endAngle = (CGFloat(self.progress) * 2.0 * .pi) + startAngle
-         
-         progressPath.addArc(withCenter: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
-         
-         context?.setBlendMode(.copy)
-         
-         self.progressTintColor.set()
-         
-         progressPath.stroke()
-     }
- }
-
- */
 
 /*
  public class JSBarProgressView: UIView {
